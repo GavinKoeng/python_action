@@ -1,27 +1,28 @@
 name: Create Release
-
 on:
-	push:
-		tags:
-			- 'v*'
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
 
 permissions:
-	contents: write
+  contents: write
 
 jobs:
-	build:
-		runs-on: windows-latest
-		steps:
-		- name: Create Executable
-			id: create_executable
-			uses: sayyid5416/pyinstaller@v1
-			with:
-				python_ver: '3.12'
-				spec: 'main.py'
-				upload_exec_with_name: 'gavinkoeng_package'
-				options: --onefile
-		- name: Release
-			uses: softprops/action-gh-release@v2
-			if: startsWith(github.ref, 'refs/tags/')
-			with:
-				files: ./dist/**
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Create Executable
+        id: create_executable
+        uses: sayyid5416/pyinstaller@v1
+        with:
+          python_ver: '3.12'
+          spec: 'main.py'
+          upload_exec_with_name: 'gavinkoeng_package'
+          options: --onefile
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: ./dist/**
